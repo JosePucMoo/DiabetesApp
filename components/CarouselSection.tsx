@@ -15,6 +15,7 @@ interface CarouselItem {
 interface NavigationCallbacks {
   quiz: () => void;
   memorama: () => void;
+  calendar: () => void;
 }
 
 interface Props {
@@ -31,6 +32,11 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
     {
       title: "Inicia Un Nuevo Memorama",
       backgroundColor: "#4BB8C7",
+      image: require("../assets/images/abuelos.png"),
+    },
+    {
+      title: "Calendario de actividades",
+      backgroundColor: "#4AB6C7",
       image: require("../assets/images/abuelos.png"),
     },
   ];

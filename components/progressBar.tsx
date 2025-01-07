@@ -13,7 +13,7 @@ export default function CustomProgressBar({ current, total }: Props) {
     <View style={styles.container}>
       <View style={styles.progressBarContainer}>
         <ProgressBar progress={current / total} color={Colors.Brand01} style={styles.progressBar} />
-        <Image source={require('@/assets/images/iguana.png')} style={[styles.image, { left: `${(current / total) * 100}%` }]} />
+        <Image source={require('@/assets/images/iguana-image.png')} style={[styles.image, { left: `${(current / total) * 100}%` }]} />
       </View>
     </View>
   );

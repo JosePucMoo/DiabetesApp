@@ -40,6 +40,11 @@ const HomeScreen: React.FC = () => {
     router.navigate("QuizMenuScreen");
   };
 
+  const handleCalendarPress = () => {
+    router.navigate("Calendar"); // Navegar a la página Calendar
+  };
+  
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -65,6 +70,7 @@ const HomeScreen: React.FC = () => {
         navigationCallbacks={{
           quiz: handleExploreQuizPress,
           memorama: handleMemoramaPress,
+          calendar: handleCalendarPress
         }}
       />
       <View style={styles.newsContainer}>
