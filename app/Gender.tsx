@@ -27,7 +27,7 @@ const Gender: React.FC<GenderProps> = ({ navigation }) => {
       await updateDoc(userDoc, {
         gender: selectedGender
       });
-      router.navigate("Birthdate");
+      router.navigate("./Birthdate");
     }
   };
 

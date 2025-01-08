@@ -26,7 +26,7 @@ const GetData: React.FC = () => {
         exp
 
       });
-      router.navigate("Gender");
+      router.navigate("./Gender");
     }
   };
 

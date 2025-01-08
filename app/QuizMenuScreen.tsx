@@ -11,7 +11,7 @@ const QuizMenuScreen: React.FC = () => {
   };
 
   const handleAnimationFinish = () => {
-    router.replace("QuizScreen");
+    router.replace("./QuizScreen");
   };
 
   return (

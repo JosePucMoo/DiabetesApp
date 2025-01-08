@@ -22,7 +22,7 @@ const SignUp: React.FC = () => {
           email: user.email,
           createdAt: new Date(),
         });
-        router.navigate("GetData");
+        router.navigate("./GetData");
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -49,7 +49,7 @@ const SignUp: React.FC = () => {
       <View style={containerStyles.questionContainer1}>
         <Text style={fontStyle.haveAccountText}>
           ¿Ya tienes una cuenta?{" "} </Text>
-          <TouchableOpacity onPress={() => router.navigate("SignIn")}>
+          <TouchableOpacity onPress={() => router.navigate("./SignIn")}>
             <Text style={fontStyle.haveAccount2Text}>Inicia Sesión</Text>
           </TouchableOpacity>
       </View>

@@ -36,7 +36,7 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
     },
     {
       title: "Calendario de actividades",
-      backgroundColor: "#4AB6C7",
+      backgroundColor: "#F9A9F9",
       image: require("../assets/images/abuelos.png"),
     },
   ];

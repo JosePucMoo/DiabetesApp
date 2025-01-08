@@ -59,7 +59,7 @@ const Profile: React.FC = () => {
   };
 
   const handleLogOut = () => {
-    router.navigate("SignIn");
+    router.navigate("./SignIn");
   };
 
   return (

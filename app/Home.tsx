@@ -28,20 +28,19 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleAvatarPress = () => {
-    router.navigate("Profile");
+    router.navigate("./Profile");
   };
 
-
   const handleMemoramaPress = () => {
-    router.navigate("Memorama");
+    router.navigate("./Memorama");
   };
 
   const handleExploreQuizPress = () => {
-    router.navigate("QuizMenuScreen");
+    router.navigate("./QuizMenuScreen");
   };
 
   const handleCalendarPress = () => {
-    router.navigate("Calendar"); // Navegar a la página Calendar
+    router.navigate("./Calendar"); // Navegar a la página Calendar
   };
   
 

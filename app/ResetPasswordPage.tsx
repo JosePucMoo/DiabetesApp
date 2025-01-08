@@ -18,7 +18,7 @@ const ResetPasswordPage: React.FC = () => {
     setSuccess("Correo de recuperación enviado.");
     setShowResetPassword(false);
     setTimeout(() => {
-      router.navigate("SignIn");
+      router.navigate("./SignIn");
     }, 2000);
   };
 

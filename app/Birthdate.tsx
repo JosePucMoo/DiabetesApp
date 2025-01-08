@@ -24,7 +24,7 @@ const BirthdateScreen: React.FC = () => {
       await updateDoc(userDoc, {
         birthdate: `${year}-${month}-${day}`,
       });
-      router.navigate("Home");
+      router.navigate("./Home");
     }
   };
 
