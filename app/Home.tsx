@@ -69,7 +69,7 @@ const HomeScreen: React.FC = () => {
         navigationCallbacks={{
           quiz: handleExploreQuizPress,
           memorama: handleMemoramaPress,
-          calendar: handleCalendarPress
+          calendar: handleCalendarPress,
         }}
       />
       <View style={styles.newsContainer}>

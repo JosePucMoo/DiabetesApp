@@ -15,7 +15,7 @@ interface CarouselItem {
 interface NavigationCallbacks {
   quiz: () => void;
   memorama: () => void;
-  calendar: () => void;
+  calendar: () => void; // Agregada función para navegar al calendario
 }
 
 interface Props {
@@ -35,9 +35,9 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
       image: require("../assets/images/abuelos.png"),
     },
     {
-      title: "Calendario de actividades",
-      backgroundColor: "#F9A9F9",
-      image: require("../assets/images/abuelos.png"),
+      title: "Consulta tu Calendario", // Nuevo elemento para el calendario
+      backgroundColor: "#FF6F61",
+      image: require("../assets/images/abuelos.png"), // Asegúrate de tener esta imagen
     },
   ];
 
@@ -67,6 +67,8 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
           navigationCallbacks.quiz();
         } else if (index === 1) {
           navigationCallbacks.memorama();
+        } else if (index === 2) {
+          navigationCallbacks.calendar(); // Llama a la función del calendario
         }
       }}
     >
@@ -84,7 +86,7 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
       <TouchableOpacity style={styles.arrowLeft} onPress={goToPrevious}>
         <Icon name="chevron-left" size={33} color="white" />
       </TouchableOpacity>
-      
+
       <Carousel
         ref={carouselRef} // Añade la referencia al carrusel
         data={data}
@@ -92,7 +94,7 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
         width={screenWidth * 0.9}
         loop={true}
       />
-      
+
       <TouchableOpacity style={styles.arrowRight} onPress={goToNext}>
         <Icon name="chevron-right" size={33} color="white" />
       </TouchableOpacity>
@@ -102,38 +104,38 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 210, 
+    height: 210,
     justifyContent: "center",
     alignItems: "center",
   },
   item: {
     borderRadius: 20,
     height: 200,
-    width: screenWidth * 0.89, 
+    width: screenWidth * 0.89,
     padding: 20,
     marginTop: 10,
     marginRight: 10,
-    justifyContent: "center", 
-    alignItems: "center", 
+    justifyContent: "center",
+    alignItems: "center",
     position: "relative",
-    overflow: "hidden", 
+    overflow: "hidden",
   },
   carouselImage: {
     position: "absolute",
-    bottom: -20, 
-    right: 40, 
-    width: "50%", 
-    height: "100%", 
-    resizeMode: "contain", 
+    bottom: -20,
+    right: 40,
+    width: "50%",
+    height: "100%",
+    resizeMode: "contain",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
     textAlign: "left",
-    position: "absolute", 
-    top: 20, 
-    left: 20, 
+    position: "absolute",
+    top: 20,
+    left: 20,
   },
   arrowLeft: {
     position: "absolute",
@@ -141,7 +143,6 @@ const styles = StyleSheet.create({
     left: 25,
     zIndex: 1,
     borderRadius: 20,
-
     padding: 5,
   },
   arrowRight: {
@@ -150,7 +151,6 @@ const styles = StyleSheet.create({
     right: 29,
     zIndex: 1,
     borderRadius: 20,
-
     padding: 5,
   },
 });
