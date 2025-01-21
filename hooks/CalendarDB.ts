@@ -27,7 +27,7 @@ const useCalendarEvents = () => {
     
     const userEventsRef = doc(collection(db, "calendarEvents"), user.uid);
     try {
-      await setDoc(userEventsRef, newEvents, { merge: true }); // 🔹 Usa `merge: true` para no perder datos previos
+      await setDoc(userEventsRef, newEvents); // Guardar los eventos en Firebase
       setEventsByDate(newEvents);
     } catch (error) {
       console.error("Error guardando eventos: ", error);
