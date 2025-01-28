@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Avatar, ProgressBar } from "react-native-paper";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { Avatar, ProgressBar, TextInput } from "react-native-paper";
 import { useRouter } from "expo-router";
-import FormProfile from "@/components/FormProfile";
 import { containerStyles } from "@/constants/Containers";
 import { fontStyle } from "@/constants/FontStyles";
 import { auth, db } from "./auth/firebase";
@@ -21,6 +20,12 @@ const Profile: React.FC = () => {
   const [limit, setLimit] = useState<number>(100);
   const [progress, setProgress] = useState(0);
 
+  // Estados para los inputs
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [state, setState] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -34,12 +39,17 @@ const Profile: React.FC = () => {
         const data = userDocSnap.data();
         setUserData(data);
         setExperience(data.exp);
-        setLevel(data.level);      
+        setLevel(data.level);
 
         const limit = 100 * Math.pow(data.level, 2);
-        
         setLimit(limit);
-        setProgress(data.exp/limit);
+        setProgress(data.exp / limit);
+
+        // Cargar valores en los inputs
+        setName(data.name || "");
+        setLastName(data.lastName || "");
+        setState(data.state || "");
+        setBirthDate(data.birthDate || "");
       }
     }
   };
@@ -48,11 +58,26 @@ const Profile: React.FC = () => {
     setEditable(true);
   };
 
-  const handleSaveChanges = async (updatedData: any) => {
+  const handleSaveChanges = async () => {
+    if (!name.trim() || !lastName.trim() || !state.trim() || !birthDate.trim()) {
+      Alert.alert("Error", "Todos los campos son obligatorios.");
+      return;
+    }
+
+    if (name.length > 100 || lastName.length > 100 || state.length > 100 || birthDate.length > 100) {
+      Alert.alert("Error", "Cada campo debe tener menos de 100 caracteres.");
+      return;
+    }
+
     const user = auth.currentUser;
     if (user) {
       const userDocRef = doc(db, "users", user.uid);
-      await updateDoc(userDocRef, updatedData);
+      await updateDoc(userDocRef, {
+        name,
+        lastName,
+        state,
+        birthDate,
+      });
       fetchUserData();
       setEditable(false);
     }
@@ -73,25 +98,55 @@ const Profile: React.FC = () => {
         <View style={styles.experienceContainer}>
           <Text style={styles.level}>{experience}</Text>
           <View style={styles.progressBarContainer}>
-            <ProgressBar progress={progress} color={Colors.Error} style={styles.progressBar}/>
+            <ProgressBar progress={progress} color={Colors.Error} style={styles.progressBar} />
           </View>
           <Text style={styles.level}>{limit}</Text>
         </View>
       </View>
-      <FormProfile
-        showNameInput={false}
-        onSubmit={handleSaveChanges}
-        editable={editable}
-        userData={userData}
-      />
-      {!editable && (
+
+      {/* Formulario de Edición */}
+      <View style={styles.formContainer}>
+        <TextInput
+          label="Nombre"
+          value={name}
+          onChangeText={setName}
+          mode="outlined"
+          editable={editable}
+        />
+        <TextInput
+          label="Apellido Paterno"
+          value={lastName}
+          onChangeText={setLastName}
+          mode="outlined"
+          editable={editable}
+        />
+        <TextInput
+          label="Estado"
+          value={state}
+          onChangeText={setState}
+          mode="outlined"
+          editable={editable}
+        />
+        <TextInput
+          label="Fecha de Nacimiento"
+          value={birthDate}
+          onChangeText={setBirthDate}
+          mode="outlined"
+          editable={editable}
+        />
+      </View>
+
+      {!editable ? (
         <TouchableOpacity style={[buttonStyles.error, { marginTop: 20 }]} onPress={handleEdit}>
           <Text style={fontStyle.primaryButtonFont}>Editar Perfil</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={[buttonStyles.success, { marginTop: 20 }]} onPress={handleSaveChanges}>
+          <Text style={fontStyle.primaryButtonFont}>Guardar Cambios</Text>
         </TouchableOpacity>
       )}
 
       <LogOutButton onLogOut={handleLogOut} />
-
     </View>
   );
 };
@@ -109,19 +164,23 @@ const styles = StyleSheet.create({
   },
   level: {
     fontSize: 18,
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    textAlign:"center",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    textAlign: "center",
     lineHeight: 24,
   },
   progressBarContainer: {
     width: "70%",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   progressBar: {
     height: 10,
-    borderRadius: 25
-  }
+    borderRadius: 25,
+  },
+  formContainer: {
+    width: "100%",
+    paddingHorizontal: 20,
+  },
 });
 
 export default Profile;
