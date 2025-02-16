@@ -8,14 +8,14 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import ErrorPopup from '@/components/ErrorPopup';
 import Buttons from '@/components/Buttons';
 import { auth } from './auth/firebase';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+//import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const SignIn: React.FC = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  GoogleSignin.configure({
+  /*GoogleSignin.configure({
     webClientId: '266379904083-abrkblctda52iff3b2rs2s5jb5t0pbus.apps.googleusercontent.com',
-  });
+  });*/
   
 
   const handleLogin = (email: string, password: string) => {
