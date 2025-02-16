@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "266379904083",
+    "project_id": "diabetesapp-b04d6",
+    "storage_bucket": "diabetesapp-b04d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266379904083:android:bb72bdbcb997a4227c32a6",
+        "android_client_info": {
+          "package_name": "com.drapdisstrack123.diabetesApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266379904083-cgmlqrcanf9fb8rpvpp3k0hq129i7hbi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.drapdisstrack123.diabetesApp",
+            "certificate_hash": "a4df26a8e89e24ea1c8374c7907533d4f874340f"
+          }
+        },
+        {
+          "client_id": "266379904083-f29dg1421lsmpd0n953a17gpigum4n5m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.drapdisstrack123.diabetesApp",
+            "certificate_hash": "6e5873cb30e7b9e0738a04d0c1c78e9eed0f76d0"
+          }
+        },
+        {
+          "client_id": "266379904083-abrkblctda52iff3b2rs2s5jb5t0pbus.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcLUjGjET81h8UPKTuBRRxLd1XgM91w7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266379904083-abrkblctda52iff3b2rs2s5jb5t0pbus.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "266379904083-k9vp0b71r4edskd16fk5dtprkb9i3je2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymous.diabetesApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
