@@ -4,7 +4,7 @@
     "slug": "diabetesApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icono-app-2.png",
+    "icon": "./assets/images/icono-app-2-chico.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
