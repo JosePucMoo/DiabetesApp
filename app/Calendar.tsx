@@ -13,12 +13,80 @@ LocaleConfig.locales['es'] = {
 };
 LocaleConfig.defaultLocale = 'es';
 
-const today = new Date().toISOString().split('T')[0];
+const today = new Intl.DateTimeFormat("es-MX", {
+  timeZone: "America/Merida",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+}).format(new Date()).split("/").reverse().join("-");
+
 
 const availableEvents = [
-  "Reunión de trabajo", "Clase de yoga", "Cena familiar", "Estudio personal", "Cita médica",
-  "Evento 1", "Evento 2", "Evento 3", "Evento 4", "Evento 5"
+  "Practicar la autoaceptación",
+  "Llevar un diario emocional",
+  "Establecer límites saludables",
+  "Practicar la meditación o el mindfulness",
+  "Hablar con un amigo o terapeuta",
+  "Participar en actividades creativas",
+  "Practicar la gratitud",
+  "Gestionar el estrés",
+  "Hacer actividades que te gusten",
+  "Desconectar de las redes sociales",
+  "Leer libros o artículos",
+  "Aprender algo nuevo",
+  "Resolver rompecabezas o sudokus",
+  "Practicar la reflexión crítica",
+  "Limitar el consumo de noticias",
+  "Practicar la meditación",
+  "Escribir ensayos o reflexiones",
+  "Participar en debates o discusiones",
+  "Organizar tareas y prioridades",
+  "Desarrollar un proyecto personal",
+  "Mantener contacto regular con amigos y familia",
+  "Participar en actividades grupales",
+  "Hacer nuevos amigos",
+  "Apoyar a otros",
+  "Practicar la escucha activa",
+  "Celebrar logros de los demás",
+  "Agradecer las relaciones importantes",
+  "Crear redes de apoyo",
+  "Limitar las relaciones tóxicas",
+  "Ser asertivo en las relaciones",
+  "Practicar la meditación o la oración",
+  "Reflexionar sobre tus valores",
+  "Pasar tiempo en la naturaleza",
+  "Practicar la gratitud",
+  "Leer textos espirituales",
+  "Asistir a servicios religiosos o espirituales",
+  "Practicar la compasión",
+  "Desarrollar un ritual personal",
+  "Reflexionar sobre el propósito de vida",
+  "Participar en actividades de voluntariado",
+  "Caminar 30 minutos",
+  "Practicar yoga",
+  "Beber suficiente agua",
+  "Dormir 7-9 horas",
+  "Revisar los pies",
+  "Hacer estiramientos",
+  "Limitar el consumo de azúcar",
+  "Escribir en un diario",
+  "Unirse a un grupo de apoyo",
+  "Meditar o hacer respiración profunda",
+  "Realizar una actividad recreativa",
+  "Hablar con alguien de confianza",
+  "Practicar la gratitud",
+  "Leer sobre diabetes",
+  "Aprender una receta saludable",
+  "Llevar un diario de comidas",
+  "Monitorear la glucosa",
+  "Contactar a un amigo o familiar",
+  "Unirse a un grupo de ejercicio",
+  "Hacer voluntariado",
+  "Meditar",
+  "Pasar tiempo en la naturaleza",
+  "Reflexionar sobre el día"
 ];
+
 
 const formatDate = (dateString) => {
   const date = new Date(dateString + "T00:00:00");
@@ -39,8 +107,7 @@ export function BasicCalendar() {
 
   const handleDatePress = (day) => {
     setSelectedDate(day.dateString);
-    setIsModalVisible(true);
-  };
+  };  
 
   const handleAddEvent = (event) => {
     if (eventsByDate[selectedDate]?.includes(event)) {
@@ -65,6 +132,13 @@ export function BasicCalendar() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity 
+        style={styles.fabButton} 
+        onPress={() => setIsModalVisible(true)}
+      >
+    <Text style={styles.fabButtonText}>+</Text>
+    </TouchableOpacity>
+
       <Calendar
         onDayPress={handleDatePress}
         markedDates={
@@ -94,7 +168,7 @@ export function BasicCalendar() {
           <View key={index} style={styles.eventRow}>
             <Text style={styles.eventText}>{event}</Text>
             <TouchableOpacity onPress={() => handleDeleteEvent(event)}>
-              <Text style={styles.deleteButton}>Eliminar</Text>
+              <Text style={styles.deleteButton}>X</Text>
             </TouchableOpacity>
           </View>
         )) || <Text style={styles.noEventsText}>Sin actividades</Text>}
@@ -107,7 +181,7 @@ export function BasicCalendar() {
             <View key={index} style={styles.eventRow}>
               <Text style={styles.eventText}>{event}</Text>
               <TouchableOpacity onPress={() => handleDeleteEvent(event)}>
-                <Text style={styles.deleteButton}>Eliminar</Text>
+                <Text style={styles.deleteButton}>X</Text>
               </TouchableOpacity>
             </View>
           )) || <Text style={styles.noEventsText}>Sin actividades</Text>}
@@ -159,7 +233,30 @@ const styles = StyleSheet.create({
   modalCloseButton: { marginTop: 20, fontSize: 16, color: "red", textAlign: "center" },
   paginationContainer: { flexDirection: "row", justifyContent: "space-between", marginTop: 10, alignItems: "center" },
   paginationButton: { fontSize: 16, color: "#00adf5", paddingVertical: 5, paddingHorizontal: 10 },
-  pageIndicator: { fontSize: 16, fontWeight: "bold" }
+  pageIndicator: { fontSize: 16, fontWeight: "bold" },
+  fabButton: {
+    position: "absolute",
+    right: 20,
+    bottom: 80,
+    width: 60,
+    height: 60,
+    backgroundColor: "#66D2A5", // Verde menta
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
+  },
+  fabButtonText: {
+    fontSize: 30,
+    color: "white",
+    fontWeight: "bold",
+  }
+  
 });
 
 export default BasicCalendar;
