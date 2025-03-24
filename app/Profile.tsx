@@ -22,9 +22,9 @@ const Profile: React.FC = () => {
 
   // Estados para los inputs
   const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [surName, setSurname] = useState("");
   const [state, setState] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [birthdate, setBirthdate] = useState("");
 
   useEffect(() => {
     fetchUserData();
@@ -47,9 +47,9 @@ const Profile: React.FC = () => {
 
         // Cargar valores en los inputs
         setName(data.name || "");
-        setLastName(data.lastName || "");
+        setSurname(data.surname || "");
         setState(data.state || "");
-        setBirthDate(data.birthDate || "");
+        setBirthdate(data.birthdate || "");
       }
     }
   };
@@ -59,12 +59,12 @@ const Profile: React.FC = () => {
   };
 
   const handleSaveChanges = async () => {
-    if (!name.trim() || !lastName.trim() || !state.trim() || !birthDate.trim()) {
+    if (!name.trim() || !surName.trim() || !state.trim() || !birthdate.trim()) {
       Alert.alert("Error", "Todos los campos son obligatorios.");
       return;
     }
 
-    if (name.length > 100 || lastName.length > 100 || state.length > 100 || birthDate.length > 100) {
+    if (name.length > 100 || surName.length > 100 || state.length > 100 || birthdate.length > 100) {
       Alert.alert("Error", "Cada campo debe tener menos de 100 caracteres.");
       return;
     }
@@ -74,9 +74,9 @@ const Profile: React.FC = () => {
       const userDocRef = doc(db, "users", user.uid);
       await updateDoc(userDocRef, {
         name,
-        lastName,
+        surName,
         state,
-        birthDate,
+        birthdate,
       });
       fetchUserData();
       setEditable(false);
@@ -115,8 +115,8 @@ const Profile: React.FC = () => {
         />
         <TextInput
           label="Apellido Paterno"
-          value={lastName}
-          onChangeText={setLastName}
+          value={surName}
+          onChangeText={setSurname}
           mode="outlined"
           editable={editable}
         />
@@ -129,8 +129,8 @@ const Profile: React.FC = () => {
         />
         <TextInput
           label="Fecha de Nacimiento"
-          value={birthDate}
-          onChangeText={setBirthDate}
+          value={birthdate}
+          onChangeText={setBirthdate}
           mode="outlined"
           editable={editable}
         />
