@@ -10,6 +10,7 @@ import { buttonStyles } from "@/constants/Buttons";
 import LogOutButton from "@/components/LogOutButton";
 import { typography } from "@/constants/Typograhpy";
 import Colors from "@/constants/Colors";
+import StatesDropdown from "@/components/StatesDropdown";
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -106,29 +107,28 @@ const Profile: React.FC = () => {
 
       {/* Formulario de Edición */}
       <View style={styles.formContainer}>
+        <Text style={styles.label}>Nombre</Text>
         <TextInput
-          label="Nombre"
           value={name}
           onChangeText={setName}
           mode="outlined"
           editable={editable}
         />
+        <Text style={styles.label}>Apellido Paterno</Text>
         <TextInput
-          label="Apellido Paterno"
           value={surName}
           onChangeText={setSurname}
           mode="outlined"
           editable={editable}
         />
-        <TextInput
-          label="Estado"
-          value={state}
-          onChangeText={setState}
-          mode="outlined"
+        <Text style={styles.label}>Estado</Text>
+        <StatesDropdown 
+          selectedState={state} 
+          onStateChange={setState} 
           editable={editable}
         />
+        <Text style={styles.label}>Fecha de nacimiento</Text>
         <TextInput
-          label="Fecha de Nacimiento"
           value={birthdate}
           onChangeText={setBirthdate}
           mode="outlined"
@@ -154,6 +154,11 @@ const Profile: React.FC = () => {
 const styles = StyleSheet.create({
   textContainer: {
     marginTop: 20,
+  },
+  label: {
+    fontSize: 12,
+    marginBottom: 2,
+    marginTop: 10
   },
   experienceContainer: {
     marginHorizontal: 24,
@@ -181,6 +186,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
   },
+  marginBottom: {
+    marginBottom: 10
+  }
 });
 
 export default Profile;
