@@ -23,7 +23,7 @@ const Profile: React.FC = () => {
 
   // Estados para los inputs
   const [name, setName] = useState("");
-  const [surName, setSurname] = useState("");
+  const [surname, setSurname] = useState("");
   const [state, setState] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
@@ -60,12 +60,12 @@ const Profile: React.FC = () => {
   };
 
   const handleSaveChanges = async () => {
-    if (!name.trim() || !surName.trim() || !state.trim() || !birthdate.trim()) {
+    if (!name.trim() || !surname.trim() || !state.trim() || !birthdate.trim()) {
       Alert.alert("Error", "Todos los campos son obligatorios.");
       return;
     }
 
-    if (name.length > 100 || surName.length > 100 || state.length > 100 || birthdate.length > 100) {
+    if (name.length > 100 || surname.length > 100 || state.length > 100 || birthdate.length > 100) {
       Alert.alert("Error", "Cada campo debe tener menos de 100 caracteres.");
       return;
     }
@@ -75,7 +75,7 @@ const Profile: React.FC = () => {
       const userDocRef = doc(db, "users", user.uid);
       await updateDoc(userDocRef, {
         name,
-        surName,
+        surname,
         state,
         birthdate,
       });
@@ -116,7 +116,7 @@ const Profile: React.FC = () => {
         />
         <Text style={styles.label}>Apellido Paterno</Text>
         <TextInput
-          value={surName}
+          value={surname}
           onChangeText={setSurname}
           mode="outlined"
           editable={editable}
@@ -183,8 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   formContainer: {
-    width: "100%",
-    paddingHorizontal: 20,
+    width: "85%",
   },
   marginBottom: {
     marginBottom: 10

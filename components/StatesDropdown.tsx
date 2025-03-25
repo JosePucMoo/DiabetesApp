@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../app/auth/firebase";
+import Colors from "@/constants/Colors";
 
 interface State {
   key: string; // ID del estado
@@ -17,6 +18,7 @@ interface StatesDropdownProps {
 
 const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateChange, editable = true }) => {
   const [states, setStates] = useState<State[]>([]);
+  const [inputColor, setInputColor] = useState<string>(); // Estado para manejar el color
 
   useEffect(() => {
     const fetchStates = async () => {
@@ -27,6 +29,12 @@ const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateC
           value: doc.data().name,
         }));
         setStates(statesArray);
+
+        if (!editable) {
+          setInputColor(Colors.Monochromatic01); // Cambia el color al inicializar si ya hay un estado seleccionado
+        } else {
+          setInputColor(Colors.Monochromatic05);
+        }
       } catch (error) {
         console.error("❌ Error al obtener los estados:", error);
       }
@@ -35,22 +43,27 @@ const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateC
     fetchStates();
   }, []);
 
+  const handleStateSelect = (key: string) => {
+    if (!editable) return; 
+    const selectedState = states.find((state) => state.key === key);
+    if (selectedState) {
+      onStateChange(selectedState.value);
+      setInputColor(Colors.Monochromatic01); // Cambia el color cuando se selecciona un estado
+    }
+  };
+
   return (
     <TouchableOpacity activeOpacity={editable ? 1 : 1} disabled={!editable}>
       <View pointerEvents={editable ? "auto" : "none"}>
         <SelectList
-          setSelected={(key: string) => {
-            if (!editable) return; 
-            const selectedState = states.find((state) => state.key === key);
-            if (selectedState) {
-              onStateChange(selectedState.value);
-            }
-          }}
+          setSelected={handleStateSelect}
           data={states}
           placeholder="Selecciona un estado"
           search={false} 
           boxStyles={styles.dropdown}
           dropdownStyles={styles.dropdownMenu}
+          dropdownTextStyles={styles.dropdownText}
+          inputStyles={ { color: inputColor }}
           defaultOption={{ key: selectedState, value: selectedState }}
         />
       </View>
@@ -60,16 +73,21 @@ const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateC
 
 const styles = StyleSheet.create({
   dropdown: {
-    borderColor: "gray",
+    width: "100%",
+    borderColor: Colors.Monochromatic08,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 20,
     backgroundColor: "white",
   },
   dropdownMenu: {
-    borderColor: "gray",
+    borderColor: Colors.Monochromatic08,
     borderWidth: 1,
     backgroundColor: "white",
   },
+  dropdownText: {
+    color: Colors.Monochromatic01,
+    fontSize: 14,  
+  }
 });
 
 export default StatesDropdown;

@@ -11,6 +11,7 @@ import {
 import { fontStyle } from "@/constants/FontStyles";
 import { containerStyles } from "@/constants/Containers";
 import { buttonStyles } from "@/constants/Buttons";
+import StatesDropdown from "@/components/StatesDropdown";
 
 interface PersonalDataFormProps {
   onSubmit: (name: string, surname: string, state: string) => void;
@@ -28,28 +29,27 @@ const PersonalDataForm: React.FC<PersonalDataFormProps> = ({ onSubmit }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={containerStyles.formContainer}
+      style={style.formContainer}
     >
       <TextInput
         style={fontStyle.textInput}
         placeholder="Nombre(s)"
+        placeholderTextColor="gray"
         autoCapitalize="words"
         value={name}
         onChangeText={setName}
       />
       <TextInput
-        style={fontStyle.textInput}
+        style={[fontStyle.textInput, {marginBottom: 20}]}
         placeholder="Primer Apellido"
+        placeholderTextColor="gray"
         autoCapitalize="words"
         value={surname}
         onChangeText={setSurname}
       />
-      <TextInput
-        style={fontStyle.textInput}
-        placeholder="Estado"
-        autoCapitalize="words"
-        value={state}
-        onChangeText={setState}
+      <StatesDropdown 
+        selectedState={state}
+        onStateChange={setState} 
       />
       <TouchableOpacity style={buttonStyles.next} onPress={handleSubmit}>
         <Text style={fontStyle.primaryButtonFont}>Siguiente</Text>
@@ -57,5 +57,13 @@ const PersonalDataForm: React.FC<PersonalDataFormProps> = ({ onSubmit }) => {
     </KeyboardAvoidingView>
   );
 };
+
+const style = StyleSheet.create({
+    formContainer: {
+      width: "85%",
+      alignItems: 'center'
+    }
+  }
+);
 
 export default PersonalDataForm;
