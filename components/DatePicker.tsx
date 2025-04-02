@@ -27,6 +27,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         mode="date"
         display="spinner"
         onChange={handleChange}
+        maximumDate={new Date()} 
         style={styles.datePicker}
       />
     </View>

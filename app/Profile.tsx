@@ -8,9 +8,9 @@ import { auth, db } from "./auth/firebase";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { buttonStyles } from "@/constants/Buttons";
 import LogOutButton from "@/components/LogOutButton";
-import { typography } from "@/constants/Typograhpy";
 import Colors from "@/constants/Colors";
 import StatesDropdown from "@/components/StatesDropdown";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -26,6 +26,8 @@ const Profile: React.FC = () => {
   const [surname, setSurname] = useState("");
   const [state, setState] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -109,17 +111,19 @@ const Profile: React.FC = () => {
       <View style={styles.formContainer}>
         <Text style={styles.label}>Nombre</Text>
         <TextInput
+          style={[!editable && styles.disabled, styles.input]}
           value={name}
           onChangeText={setName}
-          mode="outlined"
           editable={editable}
+          underlineColor= 'transparent'
         />
         <Text style={styles.label}>Apellido Paterno</Text>
         <TextInput
+          style={[!editable && styles.disabled, styles.input]}
           value={surname}
           onChangeText={setSurname}
-          mode="outlined"
           editable={editable}
+          underlineColor= 'transparent'
         />
         <Text style={styles.label}>Estado</Text>
         <StatesDropdown 
@@ -128,12 +132,55 @@ const Profile: React.FC = () => {
           editable={editable}
         />
         <Text style={styles.label}>Fecha de nacimiento</Text>
-        <TextInput
-          value={birthdate}
-          onChangeText={setBirthdate}
-          mode="outlined"
-          editable={editable}
-        />
+
+        {/* Campo de texto no editable manualmente, pero abre el DatePicker */}
+        <TouchableOpacity 
+          activeOpacity={editable ? 0 : 1}
+          disabled={!editable}
+          onPress={() => editable && setShowDatePicker(true)}
+        >
+          <TextInput
+            style={[!editable && styles.disabled, styles.input]}
+            value={birthdate}
+            editable={false} // No editable manualmente
+            pointerEvents="none" // Evita abrir el teclado
+            underlineColor= 'transparent'
+          />
+        </TouchableOpacity>
+
+        {/* DatePicker aparece cuando el usuario toca el TextInput */}
+        {showDatePicker && (
+          <>
+           <View style={containerStyles.simpleContainer}>
+              <DateTimePicker
+                value={selectedDate || new Date()}
+                mode="date"
+                display="spinner"
+                onChange={(event, date) => {
+                  if (date) {
+                    setSelectedDate(date); // Almacena la fecha seleccionada
+                  }
+                }}
+                maximumDate={new Date()} 
+              />
+
+              {/* Botón para guardar la fecha seleccionada */}
+              <TouchableOpacity
+                style={[
+                  buttonStyles.success,
+                ]}
+                onPress={() => {
+                  if (editable && selectedDate) {
+                    setBirthdate(selectedDate.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+                    setShowDatePicker(false); // Ocultar el DatePicker después de guardar
+                  }
+                }}
+              >
+                <Text style={fontStyle.primaryButtonFont}>Guardar Fecha</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
 
       {!editable ? (
@@ -155,8 +202,23 @@ const styles = StyleSheet.create({
   textContainer: {
     marginTop: 20,
   },
+  disabled: {
+    opacity: 0.5 
+  },
+  input: {
+    width: '100%',
+    height: 45,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20, 
+    borderBottomRightRadius: 20,
+    backgroundColor: Colors.FontWhite,
+    
+  },
   label: {
-    fontSize: 12,
+    fontSize: 14,
     marginBottom: 2,
     marginTop: 10
   },

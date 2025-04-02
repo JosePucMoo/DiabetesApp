@@ -53,7 +53,7 @@ const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateC
   };
 
   return (
-    <TouchableOpacity activeOpacity={editable ? 1 : 1} disabled={!editable}>
+    <TouchableOpacity style={!editable && styles.disabled} disabled={!editable}>
       <View pointerEvents={editable ? "auto" : "none"}>
         <SelectList
           setSelected={handleStateSelect}
@@ -63,7 +63,7 @@ const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateC
           boxStyles={styles.dropdown}
           dropdownStyles={styles.dropdownMenu}
           dropdownTextStyles={styles.dropdownText}
-          inputStyles={ { color: inputColor }}
+          inputStyles={ { color: inputColor, fontSize: 16 }}
           defaultOption={{ key: selectedState, value: selectedState }}
         />
       </View>
@@ -73,6 +73,7 @@ const StatesDropdown: React.FC<StatesDropdownProps> = ({ selectedState, onStateC
 
 const styles = StyleSheet.create({
   dropdown: {
+    height: 45,
     width: "100%",
     borderColor: Colors.Monochromatic08,
     borderWidth: 1,
@@ -86,7 +87,10 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     color: Colors.Monochromatic01,
-    fontSize: 14,  
+    fontSize: 16,  
+  },
+  disabled: {
+    opacity: 0.5
   }
 });
 
