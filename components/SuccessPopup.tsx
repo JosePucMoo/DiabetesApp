@@ -1,30 +1,51 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Modal, Title, Button } from 'react-native-paper';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Modal from 'react-native-modal';
+import { buttonStyles } from '@/constants/Buttons';
 
-interface Props {
-  visible: boolean;
+interface SuccessPopupProps {
+  isVisible: boolean;
+  message: string;
   onClose: () => void;
 }
 
-export default function SuccessPopup({ visible, onClose }: Props) {
+const SuccessPopup: React.FC<SuccessPopupProps> = ({ isVisible, message, onClose }) => {
   return (
-    <Modal visible={visible} onDismiss={onClose} contentContainerStyle={styles.container}>
-      <View>
-        <Title>¡Buen trabajo!</Title>
-        <Button onPress={onClose}>Cerrar</Button>
+    <Modal isVisible={isVisible} onBackdropPress={onClose} onBackButtonPress={onClose}>
+      <View style={styles.modalContainer}>
+        <Text style={styles.successText}>Éxito</Text>
+        <Text style={styles.messageText}>{message}</Text>
+        <TouchableOpacity style={buttonStyles.success} onPress={onClose}>
+          <Text style={styles.closeButtonText}>Cerrar</Text>
+        </TouchableOpacity>
       </View>
     </Modal>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     backgroundColor: 'white',
-    padding: 22,
-    justifyContent: 'center',
+    padding: 20,
+    borderRadius: 10,
     alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  successText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'green',
+    marginBottom: 10,
+  },
+  messageText: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
+
+export default SuccessPopup;

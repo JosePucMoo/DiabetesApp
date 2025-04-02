@@ -1,31 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, StatusBar, TouchableWithoutFeedback } from "react-native";
 import { Avatar, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
 import CarouselSection from "@/components/CarouselSection";
 import NewsSection from "@/components/NewsSection";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./auth/firebase";
 
 const HomeScreen: React.FC = () => {
   const router = useRouter();
+  const [userData, setUserData] = useState<any>(null);
 
-  const handleAvatarPress = () => {
-    router.navigate("Profile");
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        setUserData(userDocSnap.data());
+      }
+    }
   };
 
+  const handleAvatarPress = () => {
+    router.navigate("./Profile");
+  };
 
   const handleMemoramaPress = () => {
-    router.navigate("Memorama");
+    router.navigate("./Memorama");
   };
 
   const handleExploreQuizPress = () => {
-    router.navigate("QuizScreen");
+    router.navigate("./QuizMenuScreen");
   };
+
+  const handleCalendarPress = () => {
+    router.navigate("./Calendar"); // Navegar a la página Calendar
+  };
+  
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <View style={styles.textContainer}>
         <Text style={[styles.headerText, styles.margin]}>Buenos Dias,</Text>
+        <Text style={styles.levelPill}>Nivel {userData?.level}</Text>
         <TouchableWithoutFeedback onPress={handleAvatarPress}>
           <View style={styles.avatarContainer}>
             <Avatar.Image
@@ -36,7 +60,7 @@ const HomeScreen: React.FC = () => {
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.nameContainer}>
-        <Text style={[styles.nameText, styles.margin]}>Diego Burgos,</Text>
+        <Text style={[styles.nameText, styles.margin]}>{userData?.name},</Text>
         <Text style={[styles.headerText, styles.margin]}>
           Entretenimiento Interactivo
         </Text>
@@ -45,6 +69,7 @@ const HomeScreen: React.FC = () => {
         navigationCallbacks={{
           quiz: handleExploreQuizPress,
           memorama: handleMemoramaPress,
+          calendar: handleCalendarPress,
         }}
       />
       <View style={styles.newsContainer}>
@@ -66,6 +91,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
     marginBottom: 10,
+    flexGrow: 1
+  },
+  levelPill: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "right",
+    marginBottom: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 25,
+    backgroundColor: "#ff5722"
   },
   nameText: {
     fontSize: 48,

@@ -6,7 +6,7 @@ export const fontStyle= StyleSheet.create ({
     primaryButtonFont:{
         ...typography.h4,
         color: Colors.FontWhite,
-        
+        textAlign: 'center',
     },
     secondaryButtonFont:{
         ...typography.h4,
@@ -36,35 +36,44 @@ export const fontStyle= StyleSheet.create ({
     blackTextFont:{
         ...typography.h3,
         color: Colors.FontDark,
+        fontWeight: 'medium'
     },
     headlineFont:{
         ...typography.h12,
         color: Colors.FontDark,
+        marginTop: 20,
         marginBottom: 20,
+    },
+    headlineFontData:{
+        ...typography.h12,
+        color: Colors.FontDark,
+        marginBottom: 20,
+        textAlign: 'center',
     },
     textFieldFont:{
         ...typography.ps,
         color: Colors.FontDark,
     },
     haveAccountText:{
-        marginTop: 20,
         ...typography.ps2,
         color: Colors.Monochromatic05,
     },
     haveAccount2Text:{
         ...typography.ps2,
         color: Colors.Brand01,
+        position: 'relative',
+        marginLeft: 5,
         fontWeight: 'bold',
     },
     textInput: {
-        width: '85%',
+        width: '100%',
         height: 50,
         borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 20,
         paddingLeft: 15,
+        paddingRight: 45,
         marginVertical: 10,
-        marginBottom: 5,
         backgroundColor: Colors.FontWhite,
-      },
+    },
 })

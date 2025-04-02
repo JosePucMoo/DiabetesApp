@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Text } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons"; // Asegúrate de tener esta librería instalada
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -14,6 +15,7 @@ interface CarouselItem {
 interface NavigationCallbacks {
   quiz: () => void;
   memorama: () => void;
+  calendar: () => void; // Agregada función para navegar al calendario
 }
 
 interface Props {
@@ -32,7 +34,26 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
       backgroundColor: "#4BB8C7",
       image: require("../assets/images/abuelos.png"),
     },
+    {
+      title: "Consulta tu Calendario", // Nuevo elemento para el calendario
+      backgroundColor: "#FF6F61",
+      image: require("../assets/images/calendario2.png"), // Asegúrate de tener esta imagen
+    },
   ];
+
+  const carouselRef = useRef<any>(null); // Crea una referencia para el carrusel
+
+  const goToNext = () => {
+    if (carouselRef.current) {
+      carouselRef.current.next(); // Llama a la función `next` en el carrusel
+    }
+  };
+
+  const goToPrevious = () => {
+    if (carouselRef.current) {
+      carouselRef.current.prev(); // Llama a la función `prev` en el carrusel
+    }
+  };
 
   const renderItem = ({ item, index }: { item: CarouselItem; index: number }) => (
     <TouchableOpacity
@@ -46,6 +67,8 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
           navigationCallbacks.quiz();
         } else if (index === 1) {
           navigationCallbacks.memorama();
+        } else if (index === 2) {
+          navigationCallbacks.calendar(); // Llama a la función del calendario
         }
       }}
     >
@@ -60,50 +83,75 @@ const CarouselSection: React.FC<Props> = ({ navigationCallbacks }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.arrowLeft} onPress={goToPrevious}>
+        <Icon name="chevron-left" size={33} color="white" />
+      </TouchableOpacity>
+
       <Carousel
+        ref={carouselRef} // Añade la referencia al carrusel
         data={data}
         renderItem={renderItem}
         width={screenWidth * 0.9}
-        loop
+        loop={true}
       />
+
+      <TouchableOpacity style={styles.arrowRight} onPress={goToNext}>
+        <Icon name="chevron-right" size={33} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 210, // Altura fija, puedes ajustarla según tus necesidades
+    height: 210,
     justifyContent: "center",
     alignItems: "center",
   },
   item: {
     borderRadius: 20,
     height: 200,
-    width: screenWidth * 0.89, // Ajusta el ancho del ítem
+    width: screenWidth * 0.89,
     padding: 20,
     marginTop: 10,
     marginRight: 10,
-    justifyContent: "center", // Centra el contenido verticalmente
-    alignItems: "center", // Centra el contenido horizontalmente
+    justifyContent: "center",
+    alignItems: "center",
     position: "relative",
-    overflow: "hidden", // Asegura que el contenido no se desborde
+    overflow: "hidden",
   },
   carouselImage: {
     position: "absolute",
-    bottom: -20, // Alinea la imagen en la parte inferior
-    right: 0, // Alinea la imagen a la derecha
-    width: "50%", // Ajusta el ancho para que ocupe la mitad del contorno
-    height: "100%", // Asegura que la imagen ocupe toda la altura del contorno
-    resizeMode: "contain", // Ajusta la imagen dentro del contorno
+    bottom: -20,
+    right: 40,
+    width: "50%",
+    height: "100%",
+    resizeMode: "contain",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
-    textAlign: "left", // Alinea el texto a la izquierda
-    position: "absolute", // Posiciona el título
-    top: 20, // Ajusta según sea necesario
-    left: 20, // Ajusta según sea necesario
+    textAlign: "left",
+    position: "absolute",
+    top: 20,
+    left: 20,
+  },
+  arrowLeft: {
+    position: "absolute",
+    top: "45%",
+    left: 25,
+    zIndex: 1,
+    borderRadius: 20,
+    padding: 5,
+  },
+  arrowRight: {
+    position: "absolute",
+    top: "45%",
+    right: 29,
+    zIndex: 1,
+    borderRadius: 20,
+    padding: 5,
   },
 });
 

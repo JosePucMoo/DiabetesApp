@@ -1,76 +1,158 @@
-import React, { useState } from "react";
+import { useEffect, useState } from 'react';
+import { fetchQuestions, getCurrentUser, updateUserExperience } from './firebaseService'; 
+import { auth, db } from '@/app/auth/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { router } from 'expo-router';
 
 interface Question {
-    question: string;
-    options: string[];
-    correctAnswer: number;
+  pregunta: string;
+  opciones: string[];
+  respuesta: number;
+  nivel: number;
+}
+
+function useQuiz() {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [disabledOptions, setDisabledOptions] = useState<boolean[]>([]);
+  const [score, setScore] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showTimeout, setShowTimeout] = useState(false);
+  const [timerKey, setTimerKey] = useState(0);
+  const [experienceWon, setExperienceWon] = useState(0);
+  const [level, setLevel] = useState(0);
+  const [experience, setExperience] = useState(0);
+
+  useEffect(() => {
+    fetchQuestions().then((questions) => {
+
+      const randomizedQuestions = questions.sort(() => Math.random() - 0.5);
+      const sortedByLevelQuestions = randomizedQuestions.sort((a, b) => a.nivel - b.nivel);
+
+      setQuestions(sortedByLevelQuestions);
+      setDisabledOptions(Array(questions[0]?.opciones.length || 0).fill(false));
+    });
+  }, []);
+
+  const fetchUserData = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        setExperience(userDocSnap.data().exp);
+        setLevel(userDocSnap.data().level);
+      }
+    }
+  };
+
+  const handleOptionSelect = (index: number) => {
+    if (questions.length === 0) return;
+
+    const current = questions[currentQuestion];
+    setSelectedOption(index);
+
+    updateUserExperienceAfterAnswer();
+
+    if (index === current.respuesta) {
+      setScore(score + 1);
+
+      const nextQuestionIndex = currentQuestion + 1;
+      const isNotTheLastQuestion = nextQuestionIndex < questions.length - 1;
+      const isQuestionLevelUp = isNotTheLastQuestion && questions[nextQuestionIndex].nivel > questions[currentQuestion].nivel;
+      
+      if (isQuestionLevelUp) {
+        router.navigate("LevelCompleted");
+        handleNextQuestion();
+      } else {
+        
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          handleNextQuestion();
+        }, 1000);
+      }
+    } else {
+      const updatedDisabledOptions = [...disabledOptions];
+      updatedDisabledOptions[index] = true;
+      setDisabledOptions(updatedDisabledOptions);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (questions.length === 0) return;
+
+    setSelectedOption(null);
+    setDisabledOptions(Array(questions[currentQuestion]?.opciones.length || 0).fill(false));
+
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setTimerKey(prevKey => prevKey + 1); 
+    } else {
+      updateUserExperienceAfterQuiz();
+      handelGameEnd();
+      //setCurrentQuestion(0);
+      //setScore(0);
+      //setTimerKey(prevKey => prevKey + 1); 
+    }
+  };
+
+  const handleTimeout = () => {
+    setShowTimeout(true);
+    fetchUserData();
+  };
+
+  const handleRestartQuiz = () => {
+    setShowTimeout(false);
+    setSelectedOption(null);
+    setDisabledOptions(Array(questions[0]?.opciones.length || 0).fill(false));
+    setExperienceWon(0);
+    setTimerKey(prevKey => prevKey + 1); 
+  };
+
+  const updateUserExperienceAfterAnswer = async () => {
+    const currentUser = getCurrentUser();
+    const points = 10;
+    if (currentUser) {
+      await updateUserExperience(currentUser.uid, points);
+    }
+    setExperienceWon(experienceWon + points);
+  };
+
+  const updateUserExperienceAfterQuiz = async () => {
+    if (score == 0) return;
+    
+    const currentUser = getCurrentUser();
+    const points = 50;
+    if (currentUser) {
+      await updateUserExperience(currentUser.uid, points); 
+    }
+    setExperienceWon(experienceWon + points);
+  };
+
+  const handelGameEnd = () => {
+    router.back();
   }
 
-function useQuiz(questions: Question[]) {
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [disabledOptions, setDisabledOptions] = useState<boolean[]>(
-      Array(questions[0].options.length).fill(false)
-    );
-    const [score, setScore] = useState(0);
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [showTimeout, setShowTimeout] = useState(false);
-    const [timerKey, setTimerKey] = useState(0);
-  
-    const handleOptionSelect = (index: number) => {
-        setSelectedOption(index);
-        if (index === questions[currentQuestion].correctAnswer) {
-          setScore(score + 1);
-          setShowSuccess(true);
-          setTimeout(() => {
-            setShowSuccess(false);
-            handleNextQuestion();
-          }, 1000); // Tiempo para mostrar el popup antes de pasar a la siguiente pregunta
-        } else {
-          const updatedDisabledOptions = [...disabledOptions];
-          updatedDisabledOptions[index] = true;
-          setDisabledOptions(updatedDisabledOptions);
-        }
-      };
-    
-      const handleNextQuestion = () => {
-        setSelectedOption(null);
-        setDisabledOptions(Array(questions[currentQuestion].options.length).fill(false));
-        if (currentQuestion < questions.length - 1) {
-          setCurrentQuestion(currentQuestion + 1);
-          setTimerKey(prevKey => prevKey + 1); // Reinicia el temporizador para la nueva pregunta
-        } else {
-          // Manejar la finalización del cuestionario
-          setCurrentQuestion(0);
-          setScore(0);
-          setTimerKey(prevKey => prevKey + 1); // Reinicia el temporizador al final del cuestionario
-        }
-      };
-    
-      const handleTimeout = () => {
-        setShowTimeout(true);
-      };
-    
-      const handleRestartQuiz = () => {
-        setShowTimeout(false);
-        setSelectedOption(null);
-        setDisabledOptions(Array(questions[0].options.length).fill(false));
-        setTimerKey((prevKey) => prevKey + 1); // Cambia la clave del Timer para forzar su reinicio
-      };
+  return {
+    questions, 
+    currentQuestion,
+    selectedOption,
+    disabledOptions,
+    score,
+    showSuccess,
+    showTimeout,
+    timerKey,
+    experienceWon,
+    level,
+    experience,
+    handleOptionSelect,
+    handleNextQuestion,
+    handleTimeout,
+    handleRestartQuiz,
+    handelGameEnd
+  };
+}
 
-    return {
-      currentQuestion,
-      selectedOption,
-      disabledOptions,
-      score,
-      showSuccess,
-      showTimeout,
-      timerKey,
-      handleOptionSelect,
-      handleNextQuestion,
-      handleTimeout,
-      handleRestartQuiz,
-    };
-  }
-
-  export default useQuiz;
+export default useQuiz;
