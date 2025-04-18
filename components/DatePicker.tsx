@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Colors from "@/constants/Colors";
 
 interface DatePickerProps {
   selectedDate?: Date;
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 12,
-    backgroundColor: "#007BFF",
+    backgroundColor: Colors.Brand01,
     borderRadius: 8,
     alignItems: "center",
   },
