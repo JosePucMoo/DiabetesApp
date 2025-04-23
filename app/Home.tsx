@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, StatusBar, TouchableWithoutFeedback } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Avatar, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
 import CarouselSection from "@/components/CarouselSection";
@@ -28,23 +29,28 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleAvatarPress = () => {
-    router.navigate("Profile");
+    router.navigate("./Profile");
   };
 
-
   const handleMemoramaPress = () => {
-    router.navigate("Memorama");
+    router.navigate("./Memorama");
   };
 
   const handleExploreQuizPress = () => {
-    router.navigate("QuizMenuScreen");
+    router.navigate("./QuizMenuScreen");
   };
 
+  const handleCalendarPress = () => {
+    router.navigate("./Calendar"); // Navegar a la página Calendar
+  };
+  
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <View style={styles.textContainer}>
         <Text style={[styles.headerText, styles.margin]}>Buenos Dias,</Text>
+        <Text style={styles.levelPill}>Nivel {userData?.level}</Text>
         <TouchableWithoutFeedback onPress={handleAvatarPress}>
           <View style={styles.avatarContainer}>
             <Avatar.Image
@@ -64,13 +70,14 @@ const HomeScreen: React.FC = () => {
         navigationCallbacks={{
           quiz: handleExploreQuizPress,
           memorama: handleMemoramaPress,
+          calendar: handleCalendarPress,
         }}
       />
       <View style={styles.newsContainer}>
         <Text style={[styles.newsHeader, styles.marginTop]}>Noticias</Text>
         <NewsSection />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -85,6 +92,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
     marginBottom: 10,
+    flexGrow: 1
+  },
+  levelPill: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "right",
+    marginBottom: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 25,
+    backgroundColor: "#ff5722"
   },
   nameText: {
     fontSize: 48,
@@ -100,7 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between", // Alinear elementos al extremo
-    marginTop: 70,
+    marginTop: 0,
     marginBottom: -20,
     marginLeft: 20,
     marginRight: 20,

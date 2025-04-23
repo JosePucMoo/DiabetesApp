@@ -16,7 +16,7 @@ const SignIn: React.FC = () => {
   const handleLogin = (email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        router.navigate("Home");
+        router.navigate("./Home");
       })
       .catch(() => {
         setError("Usuario o contraseña incorrecto");
@@ -33,12 +33,12 @@ const SignIn: React.FC = () => {
       <View style={containerStyles.questionContainer1}>
       <Text style={fontStyle.haveAccountText}>
         No tienes una cuenta?{' '} </Text>
-        <TouchableOpacity onPress={() => router.navigate("SignUp")}>
+        <TouchableOpacity onPress={() => router.navigate("./SignUp")}>
           <Text style={fontStyle.haveAccount2Text}>Regístrate</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={() => router.navigate("ResetPasswordPage")}>
+      <TouchableOpacity onPress={() => router.navigate("./ResetPasswordPage")}>
         <Text style={fontStyle.haveAccount2Text}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
 

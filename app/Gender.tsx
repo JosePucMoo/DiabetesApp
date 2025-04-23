@@ -27,14 +27,14 @@ const Gender: React.FC<GenderProps> = ({ navigation }) => {
       await updateDoc(userDoc, {
         gender: selectedGender
       });
-      router.navigate("Birthdate");
+      router.navigate("./Birthdate");
     }
   };
 
   return (
     <View style={containerStyles.container}>
       <Image source={require("../assets/images/gender.png")} style={containerStyles.image} />
-      <Text style={fontStyle.headlineFont}>Escoja su género</Text>
+      <Text style={fontStyle.headlineFont}>Escoja su sexo</Text>
       <TouchableOpacity
         style={[buttonStyles.gender, selectedGender === "Masculino" && buttonStyles.boy]}
         onPress={() => handleSelectGender("Masculino")}

@@ -22,10 +22,14 @@ const SignUp: React.FC = () => {
           email: user.email,
           createdAt: new Date(),
         });
-        router.navigate("GetData");
+        router.navigate("./GetData");
       })
       .catch((error) => {
-        setError("Hubo un error, inténtelo nuevamente");
+        if (error.code === 'auth/email-already-in-use') {
+          setError("El correo electrónico ya está registrado.");
+        } else {
+          setError("Hubo un error, inténtelo nuevamente.");
+        }      
       });
   };
 
@@ -45,8 +49,8 @@ const SignUp: React.FC = () => {
       <View style={containerStyles.questionContainer1}>
         <Text style={fontStyle.haveAccountText}>
           ¿Ya tienes una cuenta?{" "} </Text>
-          <TouchableOpacity onPress={() => router.navigate("SignIn")}>
-            <Text style={fontStyle.haveAccount2Text}>Inicia Sesión</Text>
+          <TouchableOpacity onPress={() => router.navigate("./SignIn")}>
+            <Text style={fontStyle.haveAccount2Text}>Iniciar Sesión</Text>
           </TouchableOpacity>
       </View>
       

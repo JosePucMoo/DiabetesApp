@@ -1,58 +1,89 @@
-// src/components/DatePicker.tsx
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { containerStyles } from "@/constants/Containers";
-import { fontStyle } from "@/constants/FontStyles";
-import { buttonStyles } from "@/constants/Buttons";
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  Platform,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Colors from "@/constants/Colors";
 
 interface DatePickerProps {
-  day: string;
-  month: string;
-  year: string;
-  onChange: (field: string, value: string) => void;
+  selectedDate?: Date;
+  onDateChange: (date: Date) => void;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ day, month, year, onChange }) => {
-  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const years = Array.from({ length: 100 }, (_, i) => (new Date().getFullYear() - i).toString());
+const DatePicker: React.FC<DatePickerProps> = ({
+  selectedDate,
+  onDateChange,
+}) => {
+  const [show, setShow] = useState(false);
+
+  const onChange = (_event: any, date?: Date) => {
+    if (Platform.OS === "android") {
+      setShow(false); // Oculta el picker después de seleccionar en Android
+    }
+    if (date) {
+      onDateChange(date);
+    }
+  };
 
   return (
-    <View style={containerStyles.formContainer}>
-      <Picker
-        selectedValue={day}
-        style={buttonStyles.quizzOption}
-        onValueChange={(value) => onChange("day", value)}
-      >
-        <Picker.Item label="Día" value="" />
-        {days.map((day) => (
-          <Picker.Item key={day} label={day} value={day} />
-        ))}
-      </Picker>
-      <Picker
-        selectedValue={month}
-        style={buttonStyles.quizzOption}
-        onValueChange={(value) => onChange("month", value)}
-      >
-        <Picker.Item label="Mes" value="" />
-        {months.map((month) => (
-          <Picker.Item key={month} label={month} value={month} />
-        ))}
-      </Picker>
-      <Picker
-        selectedValue={year}
-        style={buttonStyles.quizzOption}
-        onValueChange={(value) => onChange("year", value)}
-      >
-        <Picker.Item label="Año" value="" />
-        {years.map((year) => (
-          <Picker.Item key={year} label={year} value={year}  />
-        ))}
-      </Picker>
+    <View style={styles.container}>
+      {Platform.OS === "ios" ? (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          display="spinner"
+          onChange={onChange}
+          maximumDate={new Date()}
+          style={styles.datePicker}
+          themeVariant="light"
+        />
+      ) : (
+        <>
+          <TouchableOpacity onPress={() => setShow(true)} style={styles.button}>
+            <Text style={styles.buttonText}>
+              {selectedDate
+                ? selectedDate.toLocaleDateString()
+                : "Selecciona una fecha"}
+            </Text>
+          </TouchableOpacity>
+          {show && (
+            <DateTimePicker
+              value={selectedDate || new Date()}
+              mode="date"
+              display="default"
+              onChange={onChange}
+              maximumDate={new Date()}
+            />
+          )}
+        </>
+      )}
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    margin: 20,
+  },
+  datePicker: {
+    width: "100%",
+    height: 200,
+  },
+  button: {
+    padding: 12,
+    backgroundColor: Colors.Brand01,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});
 
 export default DatePicker;
