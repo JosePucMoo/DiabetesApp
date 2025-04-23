@@ -87,7 +87,7 @@ const NewsSection: React.FC = () => {
 
 const styles = StyleSheet.create({
   newsContainer: {
-    maxHeight: screenHeight * 0.5,
+    maxHeight: screenHeight * 0.45,
   },
   newsItem: {
     flexDirection: "row",
