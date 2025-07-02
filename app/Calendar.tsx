@@ -166,17 +166,27 @@ export function BasicCalendar() {
         onDayPress={handleDatePress}
         markedDates={
           Object.keys(eventsByDate).reduce((acc, date) => {
-            if (date !== today && eventsByDate[date]?.length > 0) {
-              acc[date] = { 
-                selected: true, 
-                selectedColor: "#99d17d90",
-                customStyles: { text: { color: "black" } } // Mantiene el texto en negro
+            if (eventsByDate[date]?.length > 0) {
+              acc[date] = {
+                marked: true,
+                dotColor: 'red',
+                selected: date === selectedDate,
+                selectedColor: '#66D2A5',
               };
+
+              if (date === today) {
+                acc[date] = {
+                  ...acc[date],
+                  selected: true,
+                  selectedColor: '#00adf5', // Azul para hoy
+                  dotColor: 'red',
+                };
+              }
             }
             return acc;
-          }, {})
+          }, {} as Record<string, any>)
         }
-        
+
         theme={{
           todayTextColor: "#00adf5",
           textSectionTitleColor: "#222222", // Color oscuro para los nombres de los días
