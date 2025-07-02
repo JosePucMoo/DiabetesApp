@@ -20,6 +20,13 @@ const today = new Intl.DateTimeFormat("es-MX", {
   day: "2-digit"
 }).format(new Date()).split("/").reverse().join("-");
 
+const today = new Intl.DateTimeFormat("es-MX", {
+  timeZone: "America/Merida",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+}).format(new Date()).split("/").reverse().join("-");
+
 
 const availableEvents = [
   { 
@@ -104,6 +111,7 @@ const availableEvents = [
   },
 ];
 
+
 const formatDate = (dateString : any) => {
   const date = new Date(dateString + "T00:00:00");
   return new Intl.DateTimeFormat("es-ES", {
@@ -125,6 +133,7 @@ export function BasicCalendar() {
 
   const handleDatePress = (day : any) => {
     setSelectedDate(day.dateString);
+  };  
   };  
 
   const handleAddEvent = (event : any) => {
@@ -150,6 +159,13 @@ export function BasicCalendar() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity 
+        style={styles.fabButton} 
+        onPress={() => setIsModalVisible(true)}
+      >
+    <Text style={styles.fabButtonText}>+</Text>
+    </TouchableOpacity>
+
       <Calendar
         onDayPress={handleDatePress}
         markedDates={
@@ -192,6 +208,7 @@ export function BasicCalendar() {
             <View key={index} style={styles.eventRow}>
               <Text style={styles.eventText}>{event}</Text>
               <TouchableOpacity onPress={() => handleDeleteEvent(event)}>
+                <Text style={styles.deleteButton}>X</Text>
                 <Text style={styles.deleteButton}>X</Text>
               </TouchableOpacity>
             </View>
