@@ -153,46 +153,90 @@ export function BasicCalendar() {
     saveEvents(updatedEvents);
   };
 
+  const getCustomMarkedDates = () => {
+    const marked: Record<string, any> = {};
+
+    Object.keys(eventsByDate).forEach((date) => {
+      const eventCount = eventsByDate[date]?.length || 0;
+
+      let backgroundColor = "#ffffff"; // default
+
+      if (eventCount === 1) {
+        backgroundColor = "#66D2A5"; // verde
+      } else if (eventCount === 2) {
+        backgroundColor = "#FFD700"; // amarillo
+      } else if (eventCount >= 3) {
+        backgroundColor = "#FF6B6B"; // rojo
+      }
+
+      marked[date] = {
+        customStyles: {
+          container: {
+            backgroundColor,
+            borderRadius: 10,
+            borderWidth: 0,
+            borderColor: "#000",
+          },
+          text: {
+            color: "#000",
+            fontWeight: "bold",
+          },
+        },
+      };
+    });
+
+    // Asegurar que el día seleccionado también se resalte
+    if (!marked[selectedDate]) {
+      marked[selectedDate] = {
+        customStyles: {
+          container: {
+            backgroundColor: "#fff",
+            borderColor: "#000",
+            borderRadius: 10,
+            borderWidth: 2,
+          },
+          text: {
+            color: "#000",
+            fontWeight: "bold",
+          },
+        },
+      };
+    }
+
+    if (marked[today]) {
+      marked[today].customStyles.container.borderWidth = 2;
+      marked[today].customStyles.container.borderColor = "#00adf5";
+    } else {
+      marked[today] = {
+        customStyles: {
+          container: {
+            borderColor: "#00adf5",
+            borderWidth: 2,
+            borderRadius: 10,
+          },
+          text: {
+            color: "#00adf5",
+            fontWeight: "bold",
+          },
+        },
+      };
+    }
+
+    return marked;
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.fabButton} 
-        onPress={() => setIsModalVisible(true)}
-      >
-    <Text style={styles.fabButtonText}>+</Text>
-    </TouchableOpacity>
 
       <Calendar
         onDayPress={handleDatePress}
-        markedDates={
-          Object.keys(eventsByDate).reduce((acc, date) => {
-            if (eventsByDate[date]?.length > 0) {
-              acc[date] = {
-                marked: true,
-                dotColor: 'red',
-                selected: date === selectedDate,
-                selectedColor: '#66D2A5',
-              };
-
-              if (date === today) {
-                acc[date] = {
-                  ...acc[date],
-                  selected: true,
-                  selectedColor: '#00adf5', // Azul para hoy
-                  dotColor: 'red',
-                };
-              }
-            }
-            return acc;
-          }, {} as Record<string, any>)
-        }
-
+        markingType="custom"
+        markedDates={getCustomMarkedDates()}
         theme={{
-          todayTextColor: "#00adf5",
+          todayTextColor: "#000",
           textSectionTitleColor: "#222222", // Color oscuro para los nombres de los días
           textSectionTitleDisabledColor: "#666666", // Color menos oscuro para sábado y domingo
         }}
-        
       />
 
       <View style={styles.todayEventsContainer}>
@@ -220,13 +264,6 @@ export function BasicCalendar() {
           )) || <Text style={styles.noEventsText}>Sin actividades</Text>}
         </View>
       )}
-
-      <TouchableOpacity 
-        style={styles.fabButton} 
-        onPress={() => setIsModalVisible(true)}
-      >
-        <Text style={styles.fabButtonText}>+</Text>
-      </TouchableOpacity>
 
       <Modal isVisible={isModalVisible}>
         <View style={styles.modalContent}>
@@ -274,6 +311,12 @@ export function BasicCalendar() {
         </View>
       </Modal>
       
+      <TouchableOpacity 
+        style={styles.fabButton} 
+        onPress={() => setIsModalVisible(true)}
+      >
+        <Text style={styles.fabButtonText}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -302,7 +345,7 @@ const styles = StyleSheet.create({
   fabButton: {
     position: "absolute",
     right: 20,
-    bottom: 130,
+    bottom: 40,
     width: 60,
     height: 60,
     backgroundColor: "#66D2A5", // Verde menta
